@@ -1,0 +1,29 @@
+{
+  "name": "graphql-types-middleware",
+  "version": "0.0.1",
+  "dependencies": {
+    "graphql": "14.0.2"
+  },
+  "description": "Library that provides ability to easily assign middleware to GraphQL resolvers",
+  "main": "index.js",
+  "devDependencies": {
+    "express": "^4.16.3",
+    "express-graphql": "^0.6.12",
+    "node-fetch": "^2.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imdoroshenko/graphql-types-middleware.git"
+  },
+  "keywords": [
+    "graphql",
+    "middleware",
+    "express-graphql"
+  ],
+  "author": "Ivan Doroshenko <i.m.doroshenko@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/imdoroshenko/graphql-types-middleware/issues"
+  },
+  "homepage": "https://github.com/imdoroshenko/graphql-types-middleware#readme"
+}
