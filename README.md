@@ -49,6 +49,9 @@ app.use('/', graphqlHTTP({
 
 app.listen(4000)
 ``` 
+## Contribution
+
+If you found this library useful, please feel free to contribute or made a feature request.
 
 ## Examples
 
@@ -401,3 +404,8 @@ user                   [--------------------------                        ]ts: 1
 
  Total execution time: 33ms
 ```
+
+## Todo
+- Tests
+- Linting
+- Documentation
