@@ -5,7 +5,20 @@ const { Query } = require('./types')
 const { wrapper } = require('../index')
 const crypto = require('crypto')
 
+const { metricsMiddleware } = require('../lib/metrics')
+const { printChart } = require('../lib/chart')
+
 const app = express()
+
+
+app.use((req, res, next) => {
+  const originalSend = res.send
+  res.send = function() {
+    console.log(printChart(res.locals.__metrics))
+    return originalSend.apply(res, arguments)
+  }
+  next()
+})
 
 function makeHash(string) {
   const hash = crypto.createHash('sha256')
@@ -29,24 +42,17 @@ function cache(ttl) {
   }
 }
 
+const schema = wrapper(new GraphQLSchema({query: Query}), [
+  ['*.*', metricsMiddleware],
+  ['Album.photos', cache(TTL)]
+])
 
-app.use('/', graphqlHTTP({
-  schema: wrapper(new GraphQLSchema({query: Query}), [
-    ['Album.photos', cache(TTL)]
-  ]),
+app.use('/', graphqlHTTP((req, res) => ({
+  context: res.locals,
+  schema,
   graphiql: true
-}))
+})))
 
 app.listen(4000)
 
-//
-// {
-//   albums {
-//   title,
-//     photos {
-//     id
-//     title
-//     url
-//   }
-// }
-// }
+
