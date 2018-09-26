@@ -1,12 +1,13 @@
 {
   "name": "graphql-types-middleware",
   "version": "0.0.1",
-  "dependencies": {
-    "graphql": "14.0.2"
+  "peerDependencies": {
+    "graphql": "^0.12.0 || ^0.13.0 || ^14.0.0"
   },
   "description": "Library that provides ability to easily assign middleware to GraphQL resolvers",
   "main": "index.js",
   "devDependencies": {
+    "graphql": "^14.0.2",
     "express": "^4.16.3",
     "express-graphql": "^0.6.12",
     "node-fetch": "^2.2.0"
