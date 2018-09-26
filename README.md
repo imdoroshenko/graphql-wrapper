@@ -1,17 +1,17 @@
-#GraphQL middleware
+# GraphQL middleware
 -------
 This is a small library gives ability to apply middleware for your resolvers by using specific rules. It can be use for logging, collecting metrics, to cache, to modify the parameters or response, to authorisation and access control.
 
 It's build to be used with express-graphql but it can be used with 
 
-##Installation
+## Installation
 
 ```shell
 npm i graphql-types-middleware --save
 ```
 
-##Basic usage
-```js
+## Basic usage
+```javascript
 // ...
 const { wrapper } = require('graphql-types-middleware')
 /**
@@ -68,7 +68,7 @@ Check "Docs" sidebar to see all available fields.
 
 This example shows of how you can add logging to your resolvers without modifying them directly.
   
-```ShellSession
+```javascript
 async function log(next, args, {type, field}) {
   const [,,, info] = args
   let path = info.path.key
@@ -113,7 +113,7 @@ Query:
 ```
 
 Command line output:
-```ShellSession
+```shell
 Filed: "Query.user"; path:"user"; execution time: 101ms
 Filed: "User.albums"; path:"user.albums"; execution time: 71ms
 Filed: "Query.todos"; path:"todos"; execution time: 195ms
@@ -187,7 +187,7 @@ Query:
 ```
 Command line output:
 
-```ShellSession
+```shell
 posts                  [-----------------                                 ]ts: 76ms
 todos                  [----------------                                  ]ts: 50ms
 user                   [---------------                                   ]ts: 44ms
@@ -362,7 +362,7 @@ app.listen(4000)
 I will profiling tool from previous examples to show difference between non-cached and cached request.
 
 non-cached request
-```ShellSession
+```shell
 user                   [--------------                                    ]ts: 23ms
  └user.albums          [              ---------                           ]ts: 15ms
   ├user.albums.0.photos[                       -----------------          ]ts: 28ms
@@ -379,8 +379,8 @@ user                   [--------------                                    ]ts: 2
  Total execution time: 83ms
 ```
 
-non-cached request
-```ShellSession
+cached request
+```shell
 user                   [--------------------------                        ]ts: 17ms
  └user.albums          [                          ------------------------]ts: 16ms
   ├user.albums.0.photos[                                                  ]ts: 0ms
