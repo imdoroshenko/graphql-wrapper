@@ -2,7 +2,7 @@
   "name": "graphql-types-middleware",
   "version": "0.0.1",
   "dependencies": {
-    "graphql": "14.0.2"
+    "graphql": "^14.0.2"
   },
   "description": "Library that provides ability to easily assign middleware to GraphQL resolvers",
   "main": "index.js",
