@@ -50,7 +50,7 @@ app.use('/', graphqlHTTP({
 app.listen(4000)
 ``` 
 
-##Examples
+## Examples
 
 You can find all examples in [/examples](/examples) folder
 
@@ -63,7 +63,12 @@ node ./examples/example-<name>.js
 It will launch test graphql-expres server at port 4000 with enabled graphiql playground. 
 Check "Docs" sidebar to see all available fields. 
 
-###Logging example 
+- [Logging example](#logging-example)
+- [Profiling example](#profiling-example)
+- [Access control example](#access-control-example)
+- [Logging example](#cache-example)
+
+### Logging example 
 [/examples/example-logs.js](/examples/example-logs.js)
 
 This example shows of how you can add logging to your resolvers without modifying them directly.
@@ -130,7 +135,7 @@ Filed: "Album.photos"; path:"user.albums.8.photos"; execution time: 49ms
 Filed: "Album.photos"; path:"user.albums.6.photos"; execution time: 53ms
 ```
 
-###Profiling example
+### Profiling example
 [/examples/example-profiling.js](/examples/example-profiling.js)
 
 Example of how you can profile execution of GraphQL request.
@@ -205,7 +210,7 @@ user                   [---------------                                   ]ts: 4
 
  Total execution time: 154ms
 ```
-###Access control example
+### Access control example
 [/examples/example-hide-fields.js](/examples/example-hide-fields.js)
 
 This example shows how you can controll access to specific fields in your GraphQL schema 
@@ -305,7 +310,7 @@ You also can see that `albums` fields is restricted.
 }
 ```
 
-###Cache example
+### Cache example
 [/examples/example-cache.js](/examples/example-cache.js)
 
 Basic example of how you can add cache for specific fields. In this example I have added cache middleware
