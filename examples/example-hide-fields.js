@@ -30,39 +30,3 @@ app.use('/', graphqlHTTP({
 
 app.listen(4000)
 
-// {
-//   me: user(id:1) {
-//   id
-//   username
-//   address {
-//     street
-//     suite
-//     city
-//     zipcode
-//   }
-// }
-//   otherUser: user(id:2) {
-//   id
-//   username
-//   address {
-//     street
-//     suite
-//     city
-//     zipcode
-//   }
-// }
-//   otherUserPost: post(id: 20) {
-//   id
-//   title
-//   user {
-//     id
-//     username
-//     address {
-//       street
-//       suite
-//       city
-//       zipcode
-//     }
-//   }
-// }
-// }

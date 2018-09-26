@@ -18,7 +18,10 @@
   "keywords": [
     "graphql",
     "middleware",
-    "express-graphql"
+    "express-graphql",
+    "cache",
+    "profiling",
+    "logs"
   ],
   "author": "Ivan Doroshenko <i.m.doroshenko@gmail.com>",
   "license": "MIT",

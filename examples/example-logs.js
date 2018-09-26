@@ -6,7 +6,7 @@ const { wrapper } = require('../index')
 
 const app = express()
 
-async function log(next, args) {
+async function log(next, args, {type, field}) {
   const [,,, info] = args
   let path = info.path.key
   for(let current = info.path.prev; current; current = current.prev) {
@@ -14,7 +14,7 @@ async function log(next, args) {
   }
   const startTs = Date.now()
   const value = await next()
-  console.log(`"${path}" execution time: ${Date.now() - startTs}ms`)
+  console.log(`Filed: "${type}.${field}"; path:"${path}"; execution time: ${Date.now() - startTs}ms`)
   return value
 }
 
@@ -22,7 +22,7 @@ app.use('/', graphqlHTTP({
   schema: wrapper(new GraphQLSchema({query: Query}), [
     ['*.*', log]
   ]),
-  graphiql: true
+  graphiql: false
 }))
 
 app.listen(4000)

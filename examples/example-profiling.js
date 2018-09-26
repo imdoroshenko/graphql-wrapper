@@ -28,5 +28,4 @@ app.use('/', graphqlHTTP((req, res) => ({
 })))
 
 
-
 app.listen(4000)
