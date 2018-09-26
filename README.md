@@ -1,8 +1,9 @@
 # GraphQL middleware
 -------
-This is a small library gives ability to apply middleware for your resolvers by using specific rules. It can be use for logging, collecting metrics, to cache, to modify the parameters or response, to authorisation and access control.
+This is a small library that makes it possible to apply middleware for your resolvers by using specific rules. It can be used for logging, collecting metrics, to cache, to modify the parameters or response, for authorization and access control.
 
-It's build to be used with express-graphql but it can be used with 
+
+It's build to be used with express-graphql but it can be used with any other library or stand-alone. 
 
 ## Installation
 
@@ -17,11 +18,13 @@ const { wrapper } = require('graphql-types-middleware')
 /**
 * 
 * @param {Function} next original resolve function
-* @param {object[]} args original resolve arguments (https://graphql.org/learn/execution/#root-fields-resolvers)
+* @param {object[]} args original resolve arguments. https://graphql.org/learn/execution/#root-fields-resolvers
 * @param {object} args[0] (obj) The previous object, which for a field on the root Query type is often not used.
 * @param {object} args[1] (args) The arguments provided to the field in the GraphQL query.
-* @param {object} args[2] (context) A value which is provided to every resolver and holds important contextual information like the currently logged in user, or access to a database.
-* @param {object} args[3] (info) A value which holds field-specific information relevant to the current query as well as the schema details, also refer type GraphQLResolveInfo for more details. (https://graphql.org/graphql-js/type/#graphqlobjecttype)
+* @param {object} args[2] (context) A value which is provided to every resolver and holds important contextual information
+* like the currently logged in user, or access to a database.
+* @param {object} args[3] (info) A value which holds field-specific information relevant to the current query as well as the
+* schema details,also refer type GraphQLResolveInfo for more details. https://graphql.org/graphql-js/type/#graphqlobjecttype
 * @param {object} info Additional information about current resolve
 * @param {object} info.field Field name
 * @param {object} info.type Type name
