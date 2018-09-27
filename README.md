@@ -1,9 +1,8 @@
 # GraphQL middleware
 -------
-This is a small library that makes it possible to apply middleware for your resolvers by using specific rules. It can be used for logging, collecting metrics, to cache, to modify the parameters or response, for authorization and access control.
+This is a small library that makes it possible to apply middleware for your resolvers using specific rules. It can be used for logging, collecting metrics, to cache, to modify the parameters or response, for authorization and access control.
 
-
-It's build to be used with express-graphql but it can be used with any other library or stand-alone. 
+It's built to be used with express-graphql but it can also be used with any other library, as well as stand-alone.
 
 ## Installation
 
@@ -14,17 +13,16 @@ npm i graphql-types-middleware --save
 ## Basic usage
 ```javascript
 // ...
+const { allowOnly, cache, logs, csrfValidation } = require('./my-middleware')
 const { wrapper } = require('graphql-types-middleware')
 /**
 * 
 * @param {Function} next original resolve function
-* @param {object[]} args original resolve arguments. https://graphql.org/learn/execution/#root-fields-resolvers
+* @param {object[]} args original resolve arguments (https://graphql.org/learn/execution/#root-fields-resolvers)
 * @param {object} args[0] (obj) The previous object, which for a field on the root Query type is often not used.
 * @param {object} args[1] (args) The arguments provided to the field in the GraphQL query.
-* @param {object} args[2] (context) A value which is provided to every resolver and holds important contextual information
-* like the currently logged in user, or access to a database.
-* @param {object} args[3] (info) A value which holds field-specific information relevant to the current query as well as the
-* schema details,also refer type GraphQLResolveInfo for more details. https://graphql.org/graphql-js/type/#graphqlobjecttype
+* @param {object} args[2] (context) A value which is provided to every resolver and holds important contextual information like the currently logged in user, or access to a database.
+* @param {object} args[3] (info) A value which holds field-specific information relevant to the current query as well as the schema details, also refer type GraphQLResolveInfo for more details. (https://graphql.org/graphql-js/type/#graphqlobjecttype)
 * @param {object} info Additional information about current resolve
 * @param {object} info.field Field name
 * @param {object} info.type Type name
@@ -32,20 +30,21 @@ const { wrapper } = require('graphql-types-middleware')
 */
 function myMiddleware(next, args, info) {
   console.log(`myMiddleware: ${info.type}.${info.field}`)
-  return next(args) // it is not required to pass arguments to the next(),     
-}                   // if no arguments passed original args will be used
+  return next(args) // it is not required to pass arguments to next(),     
+}                   // if there are no arguments passed, original args will be used
 
 const app = express()
 
 app.use('/', graphqlHTTP({
   schema: wrapper(new GraphQLSchema({query: Query}), [
+    // middleware will me executed in order: from left to right, from top to bottom
     ['Query.users', myMiddleware], // you can specify middleware to any field in your schema
-    ['Mutation.users', myMiddleware, otherMiddleware], // multiple middleware can be assigned
-    ['User.address', myMiddleware], // You can assign middleware not only to Query or Mutation types
-    ['Mutation.*', myMiddleware], // It is possible to use wildcard , but in this case middleware will be assigned only 
-                                  // to fields that already have resolvers
-    ['!*.*', myMiddleware], // by using "!" symbol at the beginning of the rule name you can force wrapper to create
-                            // middleware for fields which initially did not have resolvers                               
+    ['Mutation.users', myMiddleware, allowOnly('admin')], // multiple middleware can be assigned
+    ['User.address', cache({ttl: 50})], // You can assign middleware not only to Query or Mutation types
+    ['Mutation.*', csrfValidation], // It is possible to use wildcard  but in this case middleware will be assigned   
+                                    // only to fields that already have resolvers
+    ['!*.*', logs], // by using "!" symbol at the beginning of the rule name, you can force wrapper to create
+                    // middleware for the fields that did not have resolvers initially                               
   ]),
   graphiql: true
 }))
@@ -54,20 +53,20 @@ app.listen(4000)
 ``` 
 ## Contribution
 
-If you found this library useful, please feel free to contribute or made a feature request.
+If you found this library useful, please feel free to contribute or make a feature request.
 
 ## Examples
 
 You can find all examples in [/examples](/examples) folder
 
-To launch example you need execute following command:
+To launch example, you need to execute the following command:
 
 ```shell
 node ./examples/example-<name>.js
 ```
 
-It will launch test graphql-expres server at port 4000 with enabled graphiql playground. 
-Check "Docs" sidebar to see all available fields. 
+It will launch test graphql-express server at port 4000 with enabled graphiql playground.
+Check "Docs" sidebar to see all available fields.
 
 - [Logging example](#logging-example)
 - [Profiling example](#profiling-example)
@@ -77,7 +76,7 @@ Check "Docs" sidebar to see all available fields.
 ### Logging example 
 [/examples/example-logs.js](/examples/example-logs.js)
 
-This example shows of how you can add logging to your resolvers without modifying them directly.
+This example shows how you can add logging to your resolvers without modifying them directly
   
 ```javascript
 async function log(next, args, {type, field}) {
@@ -146,8 +145,8 @@ Filed: "Album.photos"; path:"user.albums.6.photos"; execution time: 53ms
 
 Example of how you can profile execution of GraphQL request.
 This middleware will print chart that describes order, execution time, and sequence of every resolver that was involved
-in particular request. It also shows which requests were resolved concurrently and which one sequentially. 
-
+in particular request. It also shows which requests were resolved concurrently and which ones — sequentially. 
+ 
 ```javascript
 const { metricsMiddleware } = require('../lib/metrics')
 const { printChart } = require('../lib/chart')
@@ -219,7 +218,7 @@ user                   [---------------                                   ]ts: 4
 ### Access control example
 [/examples/example-hide-fields.js](/examples/example-hide-fields.js)
 
-This example shows how you can controll access to specific fields in your GraphQL schema 
+This example shows how you can control access to specific fields in your GraphQL schema 
 
 ```javascript
 const MY_USER_ID = 1
@@ -284,8 +283,8 @@ Query:
 }
 
 ```
-Here you can see that `address` field is hidden from all users that are not "me".
-You also can see that `albums` fields is restricted.
+Here you can see that `address` field is hidden from all users who are not "me". 
+You can also see that `albums` field is restricted
 ```json
 {
   "data": {
@@ -370,7 +369,7 @@ app.listen(4000)
 }
 ```
 
-I will profiling tool from previous examples to show difference between non-cached and cached request.
+I will use profiling tool from previous examples to show the difference between non-cached and cached request.
 
 non-cached request
 ```shell
