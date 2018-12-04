@@ -2,35 +2,39 @@ const express = require('express')
 const graphqlHTTP = require('express-graphql')
 const { GraphQLSchema } = require('graphql')
 const { Query } = require('./types')
-const { wrapper } = require('../index')
+const { wrapper, metricsMiddleware, express: { chartMiddleware } } = require('../index')
 const crypto = require('crypto')
 
-const { metricsMiddleware } = require('../lib/metrics')
-const { printChart } = require('../lib/chart')
-
+const TTL = 5000
 const app = express()
 
+const schema = wrapper(new GraphQLSchema({ query: Query }), [
+  ['*.*', metricsMiddleware],
+  ['Album.photos', cache(TTL)]
+])
 
-app.use((req, res, next) => {
-  const originalSend = res.send
-  res.send = function() {
-    console.log(printChart(res.locals.__metrics))
-    return originalSend.apply(res, arguments)
-  }
-  next()
-})
+app.use(chartMiddleware({ barWidth: 50 }))
+app.use('/', graphqlHTTP((req, res) => ({
+  context: res.locals,
+  schema,
+  graphiql: true
+})))
 
-function makeHash(string) {
+app.listen(4000)
+
+/*
+functions below created with sole purpose of the demo, do not use them in actual applications
+ */
+
+function makeHash (string) {
   const hash = crypto.createHash('sha256')
   hash.update(string)
   return hash.digest('hex')
 }
 
-const TTL = 5000
-
-function cache(ttl) {
+function cache (ttl) {
   const dictionary = new Map()
-  return async (next, [,args]) => {
+  return async (next, [, args]) => {
     const hash = makeHash(JSON.stringify(args))
     const ts = Date.now()
     if (dictionary.has(hash) && ts - dictionary.get(hash).ts < ttl) {
@@ -41,18 +45,3 @@ function cache(ttl) {
     return value
   }
 }
-
-const schema = wrapper(new GraphQLSchema({query: Query}), [
-  ['*.*', metricsMiddleware],
-  ['Album.photos', cache(TTL)]
-])
-
-app.use('/', graphqlHTTP((req, res) => ({
-  context: res.locals,
-  schema,
-  graphiql: true
-})))
-
-app.listen(4000)
-
-
