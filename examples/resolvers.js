@@ -1,71 +1,71 @@
 const fetch = require('node-fetch')
 
-function getUsers() {
+function getUsers () {
   return fetch('https://jsonplaceholder.typicode.com/users')
     .then(res => res.json())
 }
 
-function getUser(_, {id}) {
+function getUser (_, { id }) {
   return fetch(`https://jsonplaceholder.typicode.com/users/${id}`)
     .then(res => res.json())
 }
 
-function getUserAlbums({id}) {
+function getUserAlbums ({ id }) {
   return fetch(`https://jsonplaceholder.typicode.com/users/${id}/albums`)
     .then(res => res.json())
 }
 
-function getAlbum(_, {id}) {
+function getAlbum (_, { id }) {
   return fetch(`https://jsonplaceholder.typicode.com/albums/${id}`)
     .then(res => res.json())
 }
 
-function getAlbums() {
+function getAlbums () {
   return fetch(`https://jsonplaceholder.typicode.com/albums`)
     .then(res => res.json())
 }
 
-function getAlbumPhotos({id}) {
+function getAlbumPhotos ({ id }) {
   return fetch(`https://jsonplaceholder.typicode.com/albums/${id}/photos`)
     .then(res => res.json())
 }
 
-function getUserTodos({id}) {
+function getUserTodos ({ id }) {
   return fetch(`https://jsonplaceholder.typicode.com/users/${id}/todos`)
     .then(res => res.json())
 }
 
-function getUserPosts({id}) {
+function getUserPosts ({ id }) {
   return fetch(`https://jsonplaceholder.typicode.com/users/${id}/posts`)
     .then(res => res.json())
 }
 
-function getPosts() {
+function getPosts () {
   return fetch(`https://jsonplaceholder.typicode.com/posts`)
     .then(res => res.json())
 }
 
-function getPost(_, {id}) {
+function getPost (_, { id }) {
   return fetch(`https://jsonplaceholder.typicode.com/posts/${id}`)
     .then(res => res.json())
 }
 
-function getPostComments({id}) {
+function getPostComments ({ id }) {
   return fetch(`https://jsonplaceholder.typicode.com/posts/${id}/comments`)
     .then(res => res.json())
 }
 
-function getContextUser({userId}) {
+function getContextUser ({ userId }) {
   return fetch(`https://jsonplaceholder.typicode.com/users/${userId}`)
     .then(res => res.json())
 }
 
-function getTodo(_, {id}) {
-  return fetch(`https://jsonplaceholder.typicode.com/todos/${id}`)
-    .then(res => res.json())
-}
+// function getTodo (_, { id }) {
+//   return fetch(`https://jsonplaceholder.typicode.com/todos/${id}`)
+//     .then(res => res.json())
+// }
 
-function getTodos() {
+function getTodos () {
   return fetch(`https://jsonplaceholder.typicode.com/todos`)
     .then(res => res.json())
 }

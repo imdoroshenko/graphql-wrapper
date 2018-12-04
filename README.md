@@ -79,7 +79,7 @@ Check "Docs" sidebar to see all available fields.
 This example shows how you can add logging to your resolvers without modifying them directly
   
 ```javascript
-async function log(next, args, {type, field}) {
+async function log (next, args, { type, field }) {
   const [,,, info] = args
   let path = info.path.key
   for(let current = info.path.prev; current; current = current.prev) {
@@ -92,7 +92,7 @@ async function log(next, args, {type, field}) {
 }
 
 app.use('/', graphqlHTTP({
-  schema: wrapper(new GraphQLSchema({query: Query}), [
+  schema: wrapper(new GraphQLSchema({ query: Query }), [
     ['*.*', log]
   ]),
   graphiql: false
@@ -148,30 +148,20 @@ This middleware will print chart that describes order, execution time, and seque
 in particular request. It also shows which requests were resolved concurrently and which ones — sequentially. 
  
 ```javascript
-const { metricsMiddleware } = require('../lib/metrics')
-const { printChart } = require('../lib/chart')
-
-const app = express()
+const { wrapper, metricsMiddleware, express: { chartMiddleware } } = require('../index')
 
 const schema = wrapper(new GraphQLSchema({query: Query}), [
   ['*.*', metricsMiddleware]
 ])
 
-app.use((req, res, next) => {
-  const originalSend = res.send
-  res.send = function() {
-    console.log(printChart(res.locals.__metrics))
-    return originalSend.apply(res, arguments)
-  }
-  next()
-})
+const app = express()
 
+app.use(chartMiddleware({ barWidth: 50 }))
 app.use('/', graphqlHTTP((req, res) => ({
   context: res.locals,
   schema,
   graphiql: true
 })))
-
 
 app.listen(4000)
 ```
@@ -234,6 +224,8 @@ function hideNotMyAddress(next, args) {
 function onlyAdmins(next, args) {
   return IS_ADMIN? next(args) : null
 }
+
+const app = express()
 
 app.use('/', graphqlHTTP({
   schema: wrapper(new GraphQLSchema({query: Query}), [
@@ -322,13 +314,27 @@ Basic example of how you can add cache for specific fields. In this example I ha
 for `Album.photos` field.
 
 ```javascript
+const TTL = 5000
+const app = express()
+
+app.use('/', graphqlHTTP({
+  schema: wrapper(new GraphQLSchema({query: Query}), [
+    ['Album.photos', cache(TTL)]
+  ]),
+  graphiql: true
+}))
+
+app.listen(4000)
+
+/*
+functions below created with sole purpose of the demo, do not use them in actual applications
+ */
+
 function makeHash(string) {
   const hash = crypto.createHash('sha256')
   hash.update(string)
   return hash.digest('hex')
 }
-
-const TTL = 5000
 
 function cache(ttl) {
   const dictionary = new Map()
@@ -343,16 +349,6 @@ function cache(ttl) {
     return value
   }
 }
-
-
-app.use('/', graphqlHTTP({
-  schema: wrapper(new GraphQLSchema({query: Query}), [
-    ['Album.photos', cache(TTL)]
-  ]),
-  graphiql: true
-}))
-
-app.listen(4000)
 ```
 
 ```GraphQL
@@ -409,5 +405,4 @@ user                   [--------------------------                        ]ts: 1
 
 ## Todo
 - Tests
-- Linting
-- Documentation
+- Better documentation
