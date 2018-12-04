@@ -7,7 +7,7 @@ It's built to be used with express-graphql but it can also be used with any othe
 ## Installation
 
 ```shell
-npm i graphql-types-middleware --save
+npm i graphql-wrapper --save
 ```
 
 ## Basic usage
