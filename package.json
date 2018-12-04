@@ -1,6 +1,6 @@
 {
   "name": "graphql-wrapper",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Library that provides ability to easily assign middleware to GraphQL resolvers",
   "main": "index.js",
   "devDependencies": {
